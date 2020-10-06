@@ -28,6 +28,9 @@ public:
   int* vizinhos(int v);
   bool haAresta(int u, int v);
   double peso(int u, int v);
+  void removerAresta(int u, int v);
+
+  Grafo copia();
 
   Grafo(vector<string> labels, vector<Aresta> arestas);
   Grafo();

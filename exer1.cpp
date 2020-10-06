@@ -54,7 +54,7 @@ public:
   }
 
   int qtdArestas() {
-    return this->arestas.size();
+    return this->grauTotal;
   }
 
   string rotulo(int v) {
@@ -77,7 +77,7 @@ public:
     vector<int> vizinhos;
 
     for (int u = 0; u < adjacencia.size(); ++u) {
-      if (this->adjacencia.get(u, v) != 0) {
+      if (this->adjacencia.get(u, v) != NULL) {
         vizinhos.push_back(u);
       }
     }
@@ -95,9 +95,19 @@ public:
     return this->adjacencia.get(u, v);
   }
 
+  void removerAresta(int u, int v) {
+    this->adjacencia.set(u, v, 0);
+    --this->grauTotal;
+  }
+
+  Grafo copia() {
+    return Grafo(this->labels, this->arestasOriginais);
+  }
+
   Grafo(vector<string> labels, vector<Aresta> arestas) {
     this->labels = labels;
-    this->arestas = arestas;
+    this->arestasOriginais = arestas;
+    this->grauTotal = arestas.size();
     
     Simetrica adjacencia(arestas);
     this->adjacencia = adjacencia;
@@ -107,6 +117,7 @@ public:
 
 private:
   vector<string> labels;
-  vector<Aresta> arestas;
   Simetrica adjacencia;
+  vector<Aresta> arestasOriginais;
+  int grauTotal;
 };
