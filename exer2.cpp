@@ -6,12 +6,12 @@ using namespace std;
 
 
 void busca(Grafo grafo, int s) {
-  queue<int> pilha;
+  queue<int> fila;
 
   int linha = 0;
   int v = s;
   do {
-    auto vizinhos = grafo.vizinhos(s);
+    auto vizinhos = grafo.vizinhos(v);
 
     cout << linha << ": ";
     for (int i = 0; i < sizeof(vizinhos); ++i) {
@@ -19,13 +19,13 @@ void busca(Grafo grafo, int s) {
         cout << ', ';
       }
 
-      pilha.push(i);
+      fila.push(i);
       
       cout << i;
     }
     cout << endl;
 
-    pilha.pop();
-    v = pilha.front();
-  } while (!pilha.empty());
+    fila.pop();
+    v = fila.front();
+  } while (!fila.empty());
 }
