@@ -1,6 +1,6 @@
 #include <map>
 #include <vector>
-#include <cmath>
+#include <algorithm>
 #include "aresta.h"
 #include "simetrica.h"
 

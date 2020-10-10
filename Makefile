@@ -1,6 +1,5 @@
 CC := g++
 CPPFLAGS := -Wall -g
-LDLIBS = -lstdc++ -lm
 OUT := main
 
 SRC_DIR := ./src
