@@ -17,14 +17,16 @@ public:
 
   void busca(int s);
   void cicloEuleriano();
+  void floydWarshall(int s);
+  void bellmanFord();
 
   Grafo copia();
 
-  Grafo(vector<string> labels, vector<Aresta> arestas);
+  Grafo(vector<string> labels, vector<aresta> arestas);
   Grafo();
 
 private:
   vector<string> labels;
-  vector<Aresta> arestas;
+  vector<aresta> arestas;
   Simetrica adjacencia;
 };
