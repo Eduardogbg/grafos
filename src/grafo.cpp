@@ -259,7 +259,12 @@ int main() {
   string path = "exemplos/adjnoun.net";
   Grafo grafo(path);
 
-  cout << "asdasd" << get<0>(grafo.arestas[0]);
+  for (auto a: grafo.arestas) {
+    int u, v; double w;
+    tie(u, v, w) = a;
+
+    cout << u << ", " << v << ", " << w << endl;
+  }
 
   return 0;
 }
