@@ -1,4 +1,4 @@
-#include <iostream>
+#include <iostream> 
 #include <fstream>
 #include <sstream>
 #include <string>
@@ -8,115 +8,103 @@
 #include <cmath>
 #include <limits>
 #include "simetrica.h"
+#include "grafo.h"
 
 using namespace std;
 
 
-class Grafo {
-public:
-  int qtdVertices() {
-    return this->labels.size();
-  }
-  int qtdArestas() {
-    return this->arestas.size();
-  }
-  string rotulo(int v) {
-    return this->labels[v];
-  }
-  bool haAresta(int u, int v) {
-    return this->adjacencia.get(u, v) != 0;
-  }
-  double peso(int u, int v) {
-    return this->adjacencia.get(u, v);
-  }
-  void removerAresta(int u, int v) {
-    this->adjacencia.set(u, v, 0);
-  }
+int Grafo::qtdVertices() {
+  return this->labels.size();
+}
+int Grafo::qtdArestas() {
+  return this->arestas.size();
+}
+string Grafo::rotulo(int v) {
+  return this->labels[v];
+}
+bool Grafo::haAresta(int u, int v) {
+  return this->adjacencia.get(u, v) != 0;
+}
+double Grafo::peso(int u, int v) {
+  return this->adjacencia.get(u, v);
+}
+void Grafo::removerAresta(int u, int v) {
+  this->adjacencia.set(u, v, 0);
+}
 
-  int grau(int v) {
-    int grau = 0;
+int Grafo::grau(int v) {
+  int grau = 0;
 
-    for (int u = 0; u < adjacencia.size(); ++u) {
-      if (this->haAresta(u, v)) {
-        ++grau;
-      }
+  for (int u = 0; u < adjacencia.size(); ++u) {
+    if (this->haAresta(u, v)) {
+      ++grau;
     }
-
-    return grau;
-  };
-  int* vizinhos(int v) {
-    vector<int> vizinhos;
-
-    for (auto u = 0; u < adjacencia.size(); ++u) {
-      if (this->haAresta(u, v)) {
-        vizinhos.push_back(u);
-      }
-    }
-
-    return &vizinhos[0];
   }
 
-  void busca(int s);
-  void cicloEuleriano();
-  void bellmanFord(int s);
-  void floydWarshall();
-
-  Grafo copia() {
-    return Grafo(this->labels, this->arestas);
-  }
-
-  Grafo(vector<string> labels, vector<aresta> arestas) {
-    this->labels = labels;
-    this->arestas = arestas;
-
-    Simetrica adjacencia(arestas);
-    this->adjacencia = adjacencia;
-  };
-
-  Grafo(string path) {
-    ifstream infile(path);
-    string line;
-
-    getline(infile, line);
-    istringstream firstLine(line);
-    int ordem;
-    firstLine >> ordem;
-    vector<string> labels;
-
-    for (auto i = 0; i < ordem; ++i) {
-      getline(infile, line);
-      istringstream iss(line);
-
-      int v;
-      iss >> v >> labels[i];
-    }
-
-    getline(infile, line);
-    vector<aresta> arestas;
-
-    while (getline(infile, line)) {
-      istringstream iss(line);
-      
-      int u, v;
-      double w;
-      iss >> u >> v >> w;
-      arestas.push_back({ u, v, w });
-    }
-
-    this->labels = labels;
-    this->arestas = arestas;
-    
-    Simetrica adjacencia(arestas);
-    this->adjacencia = adjacencia;
-  }
-
-  Grafo() {};
-
-  vector<aresta> arestas;
-private:
-  vector<string> labels;
-  Simetrica adjacencia;
+  return grau;
 };
+int *Grafo::vizinhos(int v) {
+  vector<int> vizinhos;
+
+  for (auto u = 0; u < adjacencia.size(); ++u) {
+    if (this->haAresta(u, v)) {
+      vizinhos.push_back(u);
+    }
+  }
+
+  return &vizinhos[0];
+}
+
+Grafo Grafo::copia() {
+  return Grafo(this->labels, this->arestas);
+}
+
+Grafo::Grafo(vector<string> labels, vector<aresta> arestas) {
+  this->labels = labels;
+  this->arestas = arestas;
+
+  Simetrica adjacencia(arestas);
+  this->adjacencia = adjacencia;
+};
+
+Grafo::Grafo(string path) {
+  ifstream infile(path);
+  string line;
+
+  getline(infile, line);
+  istringstream firstLine(line);
+  int ordem;
+  firstLine >> ordem;
+  vector<string> labels;
+
+  for (auto i = 0; i < ordem; ++i) {
+    getline(infile, line);
+    istringstream iss(line);
+
+    int v;
+    iss >> v >> labels[i];
+  }
+
+  getline(infile, line);
+  vector<aresta> arestas;
+
+  while (getline(infile, line)) {
+    istringstream iss(line);
+
+    int u, v;
+    double w;
+    iss >> u >> v >> w;
+    arestas.push_back({u, v, w});
+  }
+
+  this->labels = labels;
+  this->arestas = arestas;
+
+  Simetrica adjacencia(arestas);
+  this->adjacencia = adjacencia;
+}
+
+Grafo::Grafo(){};
 
 void Grafo::busca(int s) {
   queue<int> fila;
@@ -181,8 +169,8 @@ void Grafo::cicloEuleriano() {
 
 void Grafo::bellmanFord(int s) {
   auto ordem = this->qtdVertices();
-  double dist [ordem];
-  int antecessor [ordem];
+  double dist[ordem];
+  int antecessor[ordem];
   auto infinity = numeric_limits<double>::infinity();
 
   for (auto v = 0; v < ordem; ++v) {
@@ -190,10 +178,10 @@ void Grafo::bellmanFord(int s) {
   }
 
   for (auto n = 0; n < ordem - 1; ++n) {
-    for (auto a: this->arestas) {
+    for (auto a : this->arestas) {
       int u, v;
       double w;
-      tie (u, v, w) = a;
+      tie(u, v, w) = a;
 
       auto s = dist[u] + w;
       if (s < dist[v]) {
@@ -209,11 +197,11 @@ void Grafo::bellmanFord(int s) {
     }
   }
 
-  for (auto a: arestas) {
+  for (auto a : arestas) {
     int u, v;
     double w;
-    tie (u, v, w) = a;
-    
+    tie(u, v, w) = a;
+
     if (w < abs(dist[v] - dist[u])) {
       cout << "Grafo tem ciclo negativo";
       return;
@@ -232,14 +220,15 @@ void Grafo::bellmanFord(int s) {
 
     cout << u;
     while (u != v) {
-      u = antecessor[u]; 
+      u = antecessor[u];
       cout << "," << u;
     }
     cout << "; d=" << dist[v] << endl;
   }
 }
 
-void Grafo::floydWarshall() {
+void Grafo::floydWarshall()
+{
   int ordem = this->qtdVertices();
   Simetrica dist(this->arestas);
 
@@ -266,9 +255,9 @@ void Grafo::floydWarshall() {
   }
 }
 
-
 int main() {
-  Grafo grafo("exemplos/adjnoun.net");
+  string path = "exemplos/adjnoun.net";
+  Grafo grafo(path);
 
   cout << "asdasd" << get<0>(grafo.arestas[0]);
 

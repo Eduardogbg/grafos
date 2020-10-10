@@ -1,3 +1,5 @@
+#pragma once
+
 #include <string>
 #include <vector>
 #include "aresta.h"
@@ -18,12 +20,13 @@ public:
 
   void busca(int s);
   void cicloEuleriano();
-  void floydWarshall(int s);
-  void bellmanFord();
+  void floydWarshall();
+  void bellmanFord(int s);
 
   Grafo copia();
 
   Grafo(vector<string> labels, vector<aresta> arestas);
+  Grafo(string path);
   Grafo();
 
   vector<aresta> arestas;

@@ -1,2 +1,6 @@
 # IDEs
 .vscode
+
+# Bin
+obj
+main
