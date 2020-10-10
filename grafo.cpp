@@ -45,7 +45,7 @@ public:
   int* vizinhos(int v) {
     vector<int> vizinhos;
 
-    for (int u = 0; u < adjacencia.size(); ++u) {
+    for (auto u = 0; u < adjacencia.size(); ++u) {
       if (this->haAresta(u, v)) {
         vizinhos.push_back(u);
       }
@@ -57,6 +57,7 @@ public:
   void busca(int s);
   void cicloEuleriano();
   void bellmanFord(int s);
+  void floydWarshall();
 
   Grafo copia() {
     return Grafo(this->labels, this->arestas);
@@ -82,12 +83,12 @@ void Grafo::busca(int s) {
   queue<int> fila;
 
   int linha = 0;
-  int v = s;
+  auto v = s;
   do {
     auto vizinhos = this->vizinhos(v);
 
     cout << linha << ": ";
-    for (int i = 0; i < sizeof(vizinhos); ++i) {
+    for (auto i = 0; i < sizeof(vizinhos); ++i) {
       fila.push(i);
 
       if (i != 0) {
@@ -106,8 +107,8 @@ void Grafo::cicloEuleriano() {
   int grauImpar[2];
   int qtdGrauImpar = 0;
 
-  int ordem = this->qtdVertices();
-  for (int i = 0; i < ordem; ++i) {
+  auto ordem = this->qtdVertices();
+  for (auto i = 0; i < ordem; ++i) {
     if (this->grau(i) % 2 != 0) {
       cout << '0' << endl;
       return;
@@ -122,9 +123,9 @@ void Grafo::cicloEuleriano() {
   do {
     auto vizinhos = g.vizinhos(v);
 
-    int size = sizeof(vizinhos);
-    for (int i = 0; i < size; ++i) {
-      if (g.grau(i) || i == size - 1) {
+    auto size = sizeof(vizinhos);
+    for (auto i = 0; i < size; ++i) {
+      if (g.grau(i) > 2 || i == size - 1) {
         ciclo.push_back(i);
         g.removerAresta(i, v);
         v = i;
@@ -133,7 +134,7 @@ void Grafo::cicloEuleriano() {
     }
   } while (g.qtdArestas() > 0);
 
-  for (int i = 0; i < ciclo.size(); ++i) {
+  for (auto i = 0; i < ciclo.size(); ++i) {
     if (i != 0) {
       cout << ',';
     }
@@ -152,9 +153,8 @@ void Grafo::bellmanFord(int s) {
     dist[v] = (v == s) ? 0 : infinity;
   }
 
-  auto arestas = this->arestas;
   for (auto n = 0; n < ordem - 1; ++n) {
-    for (aresta a: arestas) {
+    for (auto a: this->arestas) {
       int u, v;
       double w;
       tie (u, v, w) = a;
@@ -173,7 +173,7 @@ void Grafo::bellmanFord(int s) {
     }
   }
 
-  for (aresta a: arestas) {
+  for (auto a: arestas) {
     int u, v;
     double w;
     tie (u, v, w) = a;
@@ -200,5 +200,36 @@ void Grafo::bellmanFord(int s) {
       cout << "," << u;
     }
     cout << "; d=" << dist[v] << endl;
+  }
+}
+
+void Grafo::floydWarshall() {
+  int ordem = this->qtdVertices();
+  Simetrica dist(this->arestas);
+
+  for (auto v = 0; v < ordem; ++v) {
+    dist.set(v, v, 0);
+  }
+
+  for (auto k = 0; k < ordem; ++k) {
+    for (auto u = 0; u < ordem; ++u) {
+      for (auto v = 0; v < ordem; ++v) {
+        auto t = dist.get(u, k) + dist.get(k, v);
+
+        if (dist.get(u, v) > t) {
+          dist.set(u, v, t);
+        }
+      }
+    }
+  }
+
+  for (auto v = 0; v < ordem; ++v) {
+    cout << v << ":";
+
+    cout << dist.get(0, v);
+    for (auto u = 1; u < ordem; ++u) {
+      cout << "," << dist.get(u, v);
+    }
+    cout << endl;
   }
 }

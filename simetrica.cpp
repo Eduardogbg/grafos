@@ -20,12 +20,10 @@ public:
   }
 
   Simetrica(vector<aresta> arestas) {
-    for (int k = 0; k <= arestas.size(); k++) {
-      aresta aresta = arestas[k];
-
+    for (auto a: arestas) {
       int i, j;
       double w;
-      tie (i, j, w) = aresta;
+      tie (i, j, w) = a;
 
       int maiorIndice = max(i, j);
       if (maiorIndice > this->ordem) {
