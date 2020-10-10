@@ -112,10 +112,11 @@ void Grafo::busca(int s) {
 
   int linha = 0;
   auto v = s;
+  cout << linha++ << ": " << s << endl;
   do {
     auto vizinhos = this->vizinhos(v);
     
-    cout << ++linha << ": ";
+    cout << linha++ << ": ";
     bool primeiro = true;
     for (auto vizinho: vizinhos) {
       if (visitados[vizinho]) {
