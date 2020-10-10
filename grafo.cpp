@@ -3,6 +3,7 @@
 #include <tuple>
 #include <cmath>
 #include <queue>
+#include <limits>
 #include "simetrica.h"
 #include "grafo.h"
 
@@ -55,6 +56,7 @@ public:
 
   void busca(int s);
   void cicloEuleriano();
+  void bellmanFord(int s);
 
   Grafo copia() {
     return Grafo(this->labels, this->arestas);
@@ -70,10 +72,10 @@ public:
 
   Grafo() {};
 
+  vector<aresta> arestas;
 private:
   vector<string> labels;
   Simetrica adjacencia;
-  vector<aresta> arestas;
 };
 
 void Grafo::busca(int s) {
@@ -138,4 +140,65 @@ void Grafo::cicloEuleriano() {
     cout << ciclo[i];
   }
   cout << endl;
+}
+
+void Grafo::bellmanFord(int s) {
+  auto ordem = this->qtdVertices();
+  double dist [ordem];
+  int antecessor [ordem];
+  auto infinity = numeric_limits<double>::infinity();
+
+  for (auto v = 0; v < ordem; ++v) {
+    dist[v] = (v == s) ? 0 : infinity;
+  }
+
+  auto arestas = this->arestas;
+  for (auto n = 0; n < ordem - 1; ++n) {
+    for (aresta a: arestas) {
+      int u, v;
+      double w;
+      tie (u, v, w) = a;
+
+      auto s = dist[u] + w;
+      if (s < dist[v]) {
+        dist[v] = s;
+        antecessor[v] = u;
+      }
+
+      auto t = dist[v] + w;
+      if (t < dist[u]) {
+        dist[u] = t;
+        antecessor[u] = v;
+      }
+    }
+  }
+
+  for (aresta a: arestas) {
+    int u, v;
+    double w;
+    tie (u, v, w) = a;
+    
+    if (w < abs(dist[v] - dist[u])) {
+      cout << "Grafo tem ciclo negativo";
+      return;
+    }
+  }
+
+  for (auto v = 0; v < ordem; ++v) {
+    cout << s << "; ";
+
+    if (dist[v] == infinity) {
+      cout << "Não há caminho" << endl;
+      continue;
+    }
+
+    auto u = s;
+
+    cout << u;
+    while (u != v) {
+      u = antecessor[u]; 
+      cout << "," << u;
+    }
+    cout << "; d=" << dist[v] << endl;
+  }
 }
