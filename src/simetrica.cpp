@@ -1,7 +1,9 @@
 #include <map>
+#include <vector>
 #include <cmath>
-#include "simetrica.h"
+#include "aresta.h"
 
+#include <iostream>
 using namespace std;
 
 
@@ -13,6 +15,7 @@ public:
 
   void set(int i, int j, double w) {
     this->esparsa[{ min(i,j), max(i,j) }] = w;
+    this->ordem = max(i, j) + 1;
   }
 
   int size() {
@@ -27,16 +30,34 @@ public:
 
       int maiorIndice = max(i, j);
       if (maiorIndice > this->ordem) {
-        this->ordem = maiorIndice;
+        this->ordem = maiorIndice + 1;
       }
       
       this->esparsa[{ min(i,j), maiorIndice }] = w;
     }
   };
 
-  Simetrica() {};
+  Simetrica() {
+    map<tuple<int, int>, double> esparsa;
+    this->esparsa = esparsa;
+    this->ordem = 0;
+  };
 
 private:
   map<tuple<int, int>, double> esparsa;
   int ordem;
 };
+
+
+int main() {
+  vector<aresta> a;
+  a.push_back({ 0, 1, 2 });
+  a.push_back({ 1, 2, 3 });
+
+  Simetrica s(a);
+
+  cout << "Tamanho: " << s.size() << endl;
+  cout << "Distância de 2 pra 1: " << s.get(2, 1) << endl;  
+
+  return 0;
+}

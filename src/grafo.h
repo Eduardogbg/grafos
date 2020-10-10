@@ -1,3 +1,4 @@
+#include <string>
 #include <vector>
 #include "aresta.h"
 #include "simetrica.h"
@@ -25,8 +26,8 @@ public:
   Grafo(vector<string> labels, vector<aresta> arestas);
   Grafo();
 
+  vector<aresta> arestas;
 private:
   vector<string> labels;
-  vector<aresta> arestas;
   Simetrica adjacencia;
 };

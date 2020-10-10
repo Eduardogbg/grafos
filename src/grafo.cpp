@@ -8,7 +8,6 @@
 #include <cmath>
 #include <limits>
 #include "simetrica.h"
-#include "grafo.h"
 
 using namespace std;
 
@@ -25,7 +24,7 @@ public:
     return this->labels[v];
   }
   bool haAresta(int u, int v) {
-    return this->adjacencia.get(u, v) != NULL;
+    return this->adjacencia.get(u, v) != 0;
   }
   double peso(int u, int v) {
     return this->adjacencia.get(u, v);
@@ -128,11 +127,11 @@ void Grafo::busca(int s) {
     auto vizinhos = this->vizinhos(v);
 
     cout << linha << ": ";
-    for (auto i = 0; i < sizeof(vizinhos); ++i) {
+    for (unsigned long i = 0; i < sizeof(vizinhos); ++i) {
       fila.push(i);
 
       if (i != 0) {
-        cout << ', ';
+        cout << ", ";
       }
       cout << i;
     }
@@ -161,7 +160,7 @@ void Grafo::cicloEuleriano() {
     auto vizinhos = g.vizinhos(v);
 
     auto size = sizeof(vizinhos);
-    for (auto i = 0; i < size; ++i) {
+    for (unsigned long i = 0; i < size; ++i) {
       if (g.grau(i) > 2 || i == size - 1) {
         ciclo.push_back(i);
         g.removerAresta(i, v);
@@ -171,7 +170,7 @@ void Grafo::cicloEuleriano() {
     }
   } while (g.qtdArestas() > 0);
 
-  for (auto i = 0; i < ciclo.size(); ++i) {
+  for (unsigned long i = 0; i < ciclo.size(); ++i) {
     if (i != 0) {
       cout << ',';
     }
@@ -269,4 +268,13 @@ void Grafo::floydWarshall() {
     }
     cout << endl;
   }
+}
+
+
+int main() {
+  Grafo grafo("exemplos/adjnoun.net");
+
+  cout << "asdasd" << get<0>(grafo.arestas[0]);
+
+  return 0;
 }
