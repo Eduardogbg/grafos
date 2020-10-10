@@ -243,10 +243,6 @@ void Grafo::floydWarshall() {
   int ordem = this->qtdVertices();
   Simetrica dist(this->arestas);
 
-  for (auto v = 0; v < ordem; ++v) {
-    dist.set(v, v, 0);
-  }
-
   for (auto k = 0; k < ordem; ++k) {
     for (auto u = 0; u < ordem; ++u) {
       for (auto v = 0; v < ordem; ++v) {

@@ -3,7 +3,6 @@
 #include <cmath>
 #include "aresta.h"
 
-#include <iostream>
 using namespace std;
 
 
@@ -47,17 +46,3 @@ private:
   map<tuple<int, int>, double> esparsa;
   int ordem;
 };
-
-
-int main() {
-  vector<aresta> a;
-  a.push_back({ 0, 1, 2 });
-  a.push_back({ 1, 2, 3 });
-
-  Simetrica s(a);
-
-  cout << "Tamanho: " << s.size() << endl;
-  cout << "Distância de 2 pra 1: " << s.get(2, 1) << endl;  
-
-  return 0;
-}
