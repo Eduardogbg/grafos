@@ -16,7 +16,7 @@ public:
   void removerAresta(int u, int v);
   
   int grau(int v);
-  int* vizinhos(int v);
+  vector<int> vizinhos(int v);
 
   void busca(int s);
   void cicloEuleriano();

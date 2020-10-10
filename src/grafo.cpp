@@ -5,7 +5,7 @@
 #include <vector>
 #include <tuple>
 #include <queue>
-#include <cmath>
+#include <map>
 #include <limits>
 #include "simetrica.h"
 #include "grafo.h"
@@ -20,7 +20,7 @@ int Grafo::qtdArestas() {
   return this->arestas.size();
 }
 string Grafo::rotulo(int v) {
-  return this->labels[v];
+  return this->labels[v - 1];
 }
 bool Grafo::haAresta(int u, int v) {
   return this->adjacencia.get(u, v) != 0;
@@ -35,7 +35,7 @@ void Grafo::removerAresta(int u, int v) {
 int Grafo::grau(int v) {
   int grau = 0;
 
-  for (int u = 0; u < adjacencia.size(); ++u) {
+  for (int u = 1; u <= adjacencia.size(); ++u) {
     if (this->haAresta(u, v)) {
       ++grau;
     }
@@ -43,20 +43,16 @@ int Grafo::grau(int v) {
 
   return grau;
 };
-int *Grafo::vizinhos(int v) {
+vector<int> Grafo::vizinhos(int v) {
   vector<int> vizinhos;
 
-  for (auto u = 0; u < adjacencia.size(); ++u) {
+  for (int u = 1; u <= adjacencia.size(); ++u) {
     if (this->haAresta(u, v)) {
       vizinhos.push_back(u);
     }
   }
 
-  return &vizinhos[0];
-}
-
-Grafo Grafo::copia() {
-  return Grafo(this->labels, this->arestas);
+  return vizinhos;
 }
 
 Grafo::Grafo(vector<string> labels, vector<aresta> arestas) {
@@ -74,15 +70,17 @@ Grafo::Grafo(string path) {
   getline(infile, line);
   istringstream firstLine(line);
   int ordem;
-  firstLine >> ordem;
+  firstLine >> line >> ordem; // use line to discard "*vertices"
   vector<string> labels;
 
-  for (auto i = 0; i < ordem; ++i) {
+  for (int i = 1; i <= ordem; ++i) {
     getline(infile, line);
     istringstream iss(line);
 
     int v;
-    iss >> v >> labels[i];
+    string label;
+    iss >> v >> label;
+    labels.push_back(label);
   }
 
   getline(infile, line);
@@ -109,25 +107,41 @@ Grafo::Grafo(){};
 void Grafo::busca(int s) {
   queue<int> fila;
 
+  Grafo g(*this);
+  map<int, bool> visitados;
+
   int linha = 0;
   auto v = s;
   do {
     auto vizinhos = this->vizinhos(v);
-
-    cout << linha << ": ";
-    for (unsigned long i = 0; i < sizeof(vizinhos); ++i) {
-      fila.push(i);
-
-      if (i != 0) {
-        cout << ", ";
+    
+    cout << ++linha << ": ";
+    bool primeiro = true;
+    for (auto vizinho: vizinhos) {
+      if (visitados[vizinho]) {
+        continue;
       }
-      cout << i;
+
+      fila.push(vizinho);
+      
+      if (!primeiro) {
+        cout << ", ";
+      } else {
+        primeiro = false;
+      }
+
+      cout << vizinho;
     }
     cout << endl;
 
-    fila.pop();
+    visitados[v] = true;
+    while (visitados[fila.front()]) {
+      fila.pop();
+    }
     v = fila.front();
   } while (!fila.empty());
+  
+  return;
 }
 
 void Grafo::cicloEuleriano() {
@@ -141,7 +155,7 @@ void Grafo::cicloEuleriano() {
   cout << '1' << endl;
 
   vector<int> ciclo;
-  auto g = this->copia();
+  Grafo g(*this);
   int v = 0;
 
   do {
@@ -149,10 +163,12 @@ void Grafo::cicloEuleriano() {
 
     auto size = sizeof(vizinhos);
     for (unsigned long i = 0; i < size; ++i) {
-      if (g.grau(i) > 2 || i == size - 1) {
-        ciclo.push_back(i);
-        g.removerAresta(i, v);
-        v = i;
+      auto vizinho = vizinhos[i];
+
+      if (g.grau(vizinho) > 2 || i == size - 1) {
+        ciclo.push_back(vizinho);
+        g.removerAresta(vizinho, v);
+        v = vizinho;
         break;
       }
     }
@@ -227,14 +243,15 @@ void Grafo::bellmanFord(int s) {
   }
 }
 
-void Grafo::floydWarshall()
-{
+void Grafo::floydWarshall() {
   int ordem = this->qtdVertices();
   Simetrica dist(this->arestas);
 
-  for (auto k = 0; k < ordem; ++k) {
-    for (auto u = 0; u < ordem; ++u) {
-      for (auto v = 0; v < ordem; ++v) {
+  cout << "Floyd Warshall " << ordem << endl;
+
+  for (int k = 1; k <= ordem; ++k) {
+    for (int u = 1; u <= ordem; ++u) {
+      for (int v = 1; v <= ordem; ++v) {
         auto t = dist.get(u, k) + dist.get(k, v);
 
         if (dist.get(u, v) > t) {
@@ -244,11 +261,11 @@ void Grafo::floydWarshall()
     }
   }
 
-  for (auto v = 0; v < ordem; ++v) {
+  for (int v = 1; v <= ordem; ++v) {
     cout << v << ":";
 
-    cout << dist.get(0, v);
-    for (auto u = 1; u < ordem; ++u) {
+    cout << dist.get(1, v);
+    for (int u = 2; u <= ordem; ++u) {
       cout << "," << dist.get(u, v);
     }
     cout << endl;
@@ -259,12 +276,7 @@ int main() {
   string path = "exemplos/adjnoun.net";
   Grafo grafo(path);
 
-  for (auto a: grafo.arestas) {
-    int u, v; double w;
-    tie(u, v, w) = a;
-
-    cout << u << ", " << v << ", " << w << endl;
-  }
+  grafo.busca(100);
 
   return 0;
 }

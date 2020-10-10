@@ -13,7 +13,7 @@ double Simetrica::get(int i, int j) {
 
 void Simetrica::set(int i, int j, double w) {
   this->esparsa[{min(i, j), max(i, j)}] = w;
-  this->ordem = max(i, j) + 1;
+  this->ordem = max(max(i, j) + 1, this->ordem);
 }
 
 int Simetrica::size() {
