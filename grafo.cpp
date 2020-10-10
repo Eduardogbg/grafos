@@ -1,8 +1,11 @@
 #include <iostream>
+#include <fstream>
+#include <sstream>
+#include <string>
 #include <vector>
 #include <tuple>
-#include <cmath>
 #include <queue>
+#include <cmath>
 #include <limits>
 #include "simetrica.h"
 #include "grafo.h"
@@ -71,6 +74,43 @@ public:
     this->adjacencia = adjacencia;
   };
 
+  Grafo(string path) {
+    ifstream infile(path);
+    string line;
+
+    getline(infile, line);
+    istringstream firstLine(line);
+    int ordem;
+    firstLine >> ordem;
+    vector<string> labels;
+
+    for (auto i = 0; i < ordem; ++i) {
+      getline(infile, line);
+      istringstream iss(line);
+
+      int v;
+      iss >> v >> labels[i];
+    }
+
+    getline(infile, line);
+    vector<aresta> arestas;
+
+    while (getline(infile, line)) {
+      istringstream iss(line);
+      
+      int u, v;
+      double w;
+      iss >> u >> v >> w;
+      arestas.push_back({ u, v, w });
+    }
+
+    this->labels = labels;
+    this->arestas = arestas;
+    
+    Simetrica adjacencia(arestas);
+    this->adjacencia = adjacencia;
+  }
+
   Grafo() {};
 
   vector<aresta> arestas;
@@ -104,9 +144,6 @@ void Grafo::busca(int s) {
 }
 
 void Grafo::cicloEuleriano() {
-  int grauImpar[2];
-  int qtdGrauImpar = 0;
-
   auto ordem = this->qtdVertices();
   for (auto i = 0; i < ordem; ++i) {
     if (this->grau(i) % 2 != 0) {
