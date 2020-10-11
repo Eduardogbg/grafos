@@ -115,6 +115,7 @@ void Grafo::busca(int s) {
 
   int linha = 0;
   proximaLinha.push(s);
+  visitados[s] = true;
 
   do {
     linhaAtual.swap(proximaLinha);
