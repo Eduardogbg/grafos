@@ -8,12 +8,22 @@ using namespace std;
 
 
 double Simetrica::get(int i, int j) {
-  return this->esparsa[{min(i, j), max(i, j)}];
+  auto coords = make_tuple(min(i, j), max(i, j));
+
+  return this->esparsa.find(coords) == this->esparsa.end()
+    ? 0
+    : this->esparsa[coords];
 }
 
 void Simetrica::set(int i, int j, double w) {
-  this->esparsa[{min(i, j), max(i, j)}] = w;
-  this->ordem = max(max(i, j) + 1, this->ordem);
+  auto coords = make_tuple(min(i, j), max(i, j));
+
+  if (w == 0) {
+    this->esparsa.erase(coords);
+  } else {
+    this->esparsa[coords] = w;
+    this->ordem = max(max(i, j) + 1, this->ordem);
+  }
 }
 
 int Simetrica::size() {

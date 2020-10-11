@@ -37,9 +37,7 @@ int Grafo::grau(int v) {
   int grau = 0;
 
   for (int u = 1; u <= adjacencia.size(); ++u) {
-    if (this->haAresta(u, v)) {
-      ++grau;
-    }
+    grau += this->haAresta(u, v);
   }
 
   return grau;
@@ -108,42 +106,46 @@ Grafo::Grafo(string path) {
 Grafo::Grafo(){};
 
 void Grafo::busca(int s) {
-  queue<int> fila;
+  queue<int> proximaLinha;
+  queue<int> linhaAtual;
 
   Grafo g(*this);
   map<int, bool> visitados;
 
   int linha = 0;
-  auto v = s;
-  cout << linha++ << ": " << s << endl;
+  proximaLinha.push(s);
+
   do {
-    auto vizinhos = this->vizinhos(v);
-    
+    linhaAtual.swap(proximaLinha);
+    proximaLinha = {};
+
     cout << linha++ << ": ";
     bool primeiro = true;
-    for (auto vizinho: vizinhos) {
-      if (visitados[vizinho]) {
-        continue;
-      }
 
-      fila.push(vizinho);
-      
+    do {
+      int v = linhaAtual.front();
       if (!primeiro) {
         cout << ", ";
       } else {
         primeiro = false;
       }
+      cout << v;
 
-      cout << vizinho;
-    }
+      auto vizinhos = this->vizinhos(v);
+      for (auto vizinho: vizinhos) {
+        if (visitados[vizinho]) {
+          continue;
+        }
+
+        proximaLinha.push(vizinho);
+        visitados[vizinho] = true;
+      }
+
+      linhaAtual.pop();
+    } while (!linhaAtual.empty());
     cout << endl;
 
-    visitados[v] = true;
-    while (visitados[fila.front()]) {
-      fila.pop();
-    }
-    v = fila.front();
-  } while (!fila.empty());
+  } while (!proximaLinha.empty());
   
   return;
 }
@@ -292,7 +294,8 @@ int main() {
   Grafo grafo(path);
 
   grafo.cicloEuleriano();
-  cout << flush;
+  cout << endl;
+  grafo.busca(6);
 
   return 0;
 }
