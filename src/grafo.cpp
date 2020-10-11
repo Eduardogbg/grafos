@@ -17,7 +17,7 @@ int Grafo::qtdVertices() {
   return this->labels.size();
 }
 int Grafo::qtdArestas() {
-  return this->arestas.size();
+  return this->grauTotal;
 }
 string Grafo::rotulo(int v) {
   return this->labels[v - 1];
@@ -30,6 +30,7 @@ double Grafo::peso(int u, int v) {
 }
 void Grafo::removerAresta(int u, int v) {
   this->adjacencia.set(u, v, 0);
+  --this->grauTotal;
 }
 
 int Grafo::grau(int v) {
@@ -58,6 +59,7 @@ vector<int> Grafo::vizinhos(int v) {
 Grafo::Grafo(vector<string> labels, vector<aresta> arestas) {
   this->labels = labels;
   this->arestas = arestas;
+  this->grauTotal = arestas.size();
 
   Simetrica adjacencia(arestas);
   this->adjacencia = adjacencia;
@@ -97,6 +99,7 @@ Grafo::Grafo(string path) {
 
   this->labels = labels;
   this->arestas = arestas;
+  this->grauTotal = arestas.size();
 
   Simetrica adjacencia(arestas);
   this->adjacencia = adjacencia;
@@ -147,22 +150,25 @@ void Grafo::busca(int s) {
 
 void Grafo::cicloEuleriano() {
   auto ordem = this->qtdVertices();
-  for (auto i = 0; i < ordem; ++i) {
+  for (int i = 1; i <= ordem; ++i) {
     if (this->grau(i) % 2 != 0) {
       cout << '0' << endl;
       return;
     }
   }
-  cout << '1' << endl;
+  cout << '1' << endl << flush;
 
   vector<int> ciclo;
+  ciclo.reserve(this->qtdArestas() + 1);
+
   Grafo g(*this);
-  int v = 0;
+  int v = 1;
+  ciclo.push_back(v);
 
   do {
     auto vizinhos = g.vizinhos(v);
+    auto size = vizinhos.size();
 
-    auto size = sizeof(vizinhos);
     for (unsigned long i = 0; i < size; ++i) {
       auto vizinho = vizinhos[i];
 
@@ -173,6 +179,11 @@ void Grafo::cicloEuleriano() {
         break;
       }
     }
+
+    if (size == 0) {
+      cout << "Buggou" << endl;
+      return;
+    }
   } while (g.qtdArestas() > 0);
 
   for (unsigned long i = 0; i < ciclo.size(); ++i) {
@@ -181,7 +192,9 @@ void Grafo::cicloEuleriano() {
     }
     cout << ciclo[i];
   }
-  cout << endl;
+  cout << endl << flush;
+
+  return;
 }
 
 void Grafo::bellmanFord(int s) {
@@ -274,10 +287,12 @@ void Grafo::floydWarshall() {
 }
 
 int main() {
-  string path = "exemplos/adjnoun.net";
+  cout << flush;
+  string path = "exemplos/ContemCicloEuleriano.net";
   Grafo grafo(path);
 
-  grafo.busca(100);
+  grafo.cicloEuleriano();
+  cout << flush;
 
   return 0;
 }
