@@ -5,6 +5,7 @@
 #include <vector>
 #include <tuple>
 #include <queue>
+#include <stack>
 #include <map>
 #include <limits>
 #include "simetrica.h"
@@ -251,17 +252,19 @@ void Grafo::bellmanFord(int s) {
       continue;
     }
 
-    vector<int> caminho;
-    caminho.push_back(v);
-    if (v != s) {
-      while (caminho.back() != s) {
-        caminho.push_back(antecessor[caminho.back()]);
-      }
+    stack<int> caminho;
+    int u = v;
+    caminho.push(u);
+    while (u != s) {
+      u = antecessor[u];
+      caminho.push(u);
     }
 
-    cout << caminho[0];
-    for (auto i = 1ul; i < caminho.size(); ++i) {
-      cout << ", " << caminho[i];
+    cout << caminho.top();
+    caminho.pop();
+    while (!caminho.empty()) {
+      cout << ", " << caminho.top();
+      caminho.pop();
     }
     cout << "; d=" << distAtual[v] << endl;
   }
