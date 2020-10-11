@@ -31,6 +31,7 @@ int Simetrica::size() {
 }
 
 Simetrica::Simetrica(vector<aresta> arestas, double standard) {
+  this->ordem = 0;
   for (auto a : arestas) {
     int i, j;
     double w;

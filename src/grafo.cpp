@@ -36,7 +36,7 @@ void Grafo::removerAresta(int u, int v) {
 int Grafo::grau(int v) {
   int grau = 0;
 
-  for (int u = 1; u <= adjacencia.size(); ++u) {
+  for (int u = 1; u <= labels.size(); ++u) {
     grau += this->haAresta(u, v);
   }
 
@@ -45,7 +45,7 @@ int Grafo::grau(int v) {
 vector<int> Grafo::vizinhos(int v) {
   vector<int> vizinhos;
 
-  for (int u = 1; u <= adjacencia.size(); ++u) {
+  for (int u = 1; u <= labels.size(); ++u) {
     if (this->haAresta(u, v)) {
       vizinhos.push_back(u);
     }
@@ -158,7 +158,7 @@ void Grafo::cicloEuleriano() {
       return;
     }
   }
-  cout << '1' << endl << flush;
+  cout << '1' << endl;
 
   vector<int> ciclo;
   ciclo.reserve(this->qtdArestas() + 1);
@@ -181,11 +181,6 @@ void Grafo::cicloEuleriano() {
         break;
       }
     }
-
-    if (size == 0) {
-      cout << "Buggou" << endl;
-      return;
-    }
   } while (g.qtdArestas() > 0);
 
   for (unsigned long i = 0; i < ciclo.size(); ++i) {
@@ -194,7 +189,7 @@ void Grafo::cicloEuleriano() {
     }
     cout << ciclo[i];
   }
-  cout << endl << flush;
+  cout << endl;
 
   return;
 }
@@ -304,18 +299,17 @@ void Grafo::floydWarshall() {
 }
 
 int main() {
-  cout << flush;
   string path = "exemplos/leandro.net";
   Grafo grafo(path);
 
+  cout << "Ciclo Euleriano" << endl;
   grafo.cicloEuleriano();
-  cout << endl;
+  cout << endl << "Busca" << endl;
   grafo.busca(6);
-  cout << endl;
+  cout << endl << "Bellman-Ford" << endl;
   grafo.bellmanFord(6);
-  cout << endl;
+  cout << endl << "Floyd-Warshall" << endl;
   grafo.floydWarshall();
-  cout << flush;
 
   return 0;
 }
