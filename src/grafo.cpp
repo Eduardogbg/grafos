@@ -274,9 +274,11 @@ void Grafo::bellmanFord(int s) {
 
 void Grafo::floydWarshall() {
   int ordem = this->qtdVertices();
-  Simetrica dist(this->arestas);
+  Simetrica dist(this->arestas, numeric_limits<double>::infinity());
 
-  cout << "Floyd Warshall " << ordem << endl;
+  for (int v = 1; v <= ordem; ++v) {
+    dist.set(v, v, 0);
+  }
 
   for (int k = 1; k <= ordem; ++k) {
     for (int u = 1; u <= ordem; ++u) {
@@ -311,6 +313,8 @@ int main() {
   grafo.busca(6);
   cout << endl;
   grafo.bellmanFord(6);
+  cout << endl;
+  grafo.floydWarshall();
   cout << flush;
 
   return 0;
