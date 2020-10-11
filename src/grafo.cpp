@@ -201,30 +201,38 @@ void Grafo::cicloEuleriano() {
 
 void Grafo::bellmanFord(int s) {
   auto ordem = this->qtdVertices();
-  double dist[ordem];
-  int antecessor[ordem];
+  double distAtual[ordem + 1];
+  double distAnterior[ordem + 1];
+  int antecessor[ordem + 1];
   auto infinity = numeric_limits<double>::infinity();
 
-  for (auto v = 0; v < ordem; ++v) {
-    dist[v] = (v == s) ? 0 : infinity;
+  for (auto v = 1; v <= ordem; ++v) {
+    distAnterior[v] = (v == s) ? 0 : infinity;
+    distAtual[v] = distAnterior[v];
   }
 
-  for (auto n = 0; n < ordem - 1; ++n) {
+  for (auto n = 1; n <= ordem - 1; ++n) {
     for (auto a : this->arestas) {
       int u, v;
       double w;
       tie(u, v, w) = a;
 
-      auto s = dist[u] + w;
-      if (s < dist[v]) {
-        dist[v] = s;
+      auto s = distAnterior[u] + w;
+      if (s < distAnterior[v]) {
+        distAtual[v] = s;
         antecessor[v] = u;
       }
 
-      auto t = dist[v] + w;
-      if (t < dist[u]) {
-        dist[u] = t;
+      auto t = distAnterior[v] + w;
+      if (t < distAnterior[u]) {
+        distAtual[u] = t;
         antecessor[u] = v;
+      }
+    }
+
+    if (n != ordem - 1) {
+      for (auto v = 1; v <= ordem; ++v) {
+        distAnterior[v] = distAtual[v];
       }
     }
   }
@@ -234,28 +242,33 @@ void Grafo::bellmanFord(int s) {
     double w;
     tie(u, v, w) = a;
 
-    if (w < abs(dist[v] - dist[u])) {
-      cout << "Grafo tem ciclo negativo";
+    if (w < abs(distAtual[v] - distAtual[u])) {
+      cout << "Grafo tem ciclo negativo" << endl;
       return;
     }
   }
+  
+  for (auto v = 1; v <= ordem; ++v) {
+    cout << v << ": ";
 
-  for (auto v = 0; v < ordem; ++v) {
-    cout << s << "; ";
-
-    if (dist[v] == infinity) {
+    if (distAtual[v] == infinity) {
       cout << "Não há caminho" << endl;
       continue;
     }
 
-    auto u = s;
-
-    cout << u;
-    while (u != v) {
-      u = antecessor[u];
-      cout << "," << u;
+    vector<int> caminho;
+    caminho.push_back(v);
+    if (v != s) {
+      while (caminho.back() != s) {
+        caminho.push_back(antecessor[caminho.back()]);
+      }
     }
-    cout << "; d=" << dist[v] << endl;
+
+    cout << caminho[0];
+    for (long unsigned i = 1; i < caminho.size(); ++i) {
+      cout << ", " << caminho[i];
+    }
+    cout << "; d=" << distAtual[v] << endl;
   }
 }
 
@@ -290,12 +303,15 @@ void Grafo::floydWarshall() {
 
 int main() {
   cout << flush;
-  string path = "exemplos/ContemCicloEuleriano.net";
+  string path = "exemplos/leandro.net";
   Grafo grafo(path);
 
   grafo.cicloEuleriano();
   cout << endl;
   grafo.busca(6);
+  cout << endl;
+  grafo.bellmanFord(6);
+  cout << flush;
 
   return 0;
 }
