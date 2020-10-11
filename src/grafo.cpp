@@ -36,7 +36,7 @@ void Grafo::removerAresta(int u, int v) {
 int Grafo::grau(int v) {
   int grau = 0;
 
-  for (int u = 1; u <= labels.size(); ++u) {
+  for (auto u = 1ul; u <= labels.size(); ++u) {
     grau += this->haAresta(u, v);
   }
 
@@ -45,7 +45,7 @@ int Grafo::grau(int v) {
 vector<int> Grafo::vizinhos(int v) {
   vector<int> vizinhos;
 
-  for (int u = 1; u <= labels.size(); ++u) {
+  for (auto u = 1ul; u <= labels.size(); ++u) {
     if (this->haAresta(u, v)) {
       vizinhos.push_back(u);
     }
@@ -171,7 +171,7 @@ void Grafo::cicloEuleriano() {
     auto vizinhos = g.vizinhos(v);
     auto size = vizinhos.size();
 
-    for (unsigned long i = 0; i < size; ++i) {
+    for (auto i = 0ul; i < size; ++i) {
       auto vizinho = vizinhos[i];
 
       if (g.grau(vizinho) > 2 || i == size - 1) {
@@ -183,7 +183,7 @@ void Grafo::cicloEuleriano() {
     }
   } while (g.qtdArestas() > 0);
 
-  for (unsigned long i = 0; i < ciclo.size(); ++i) {
+  for (auto i = 0ul; i < ciclo.size(); ++i) {
     if (i != 0) {
       cout << ',';
     }
@@ -260,7 +260,7 @@ void Grafo::bellmanFord(int s) {
     }
 
     cout << caminho[0];
-    for (long unsigned i = 1; i < caminho.size(); ++i) {
+    for (auto i = 1ul; i < caminho.size(); ++i) {
       cout << ", " << caminho[i];
     }
     cout << "; d=" << distAtual[v] << endl;
@@ -298,8 +298,8 @@ void Grafo::floydWarshall() {
   }
 }
 
-int main() {
-  string path = "exemplos/leandro.net";
+int main(int argc, char* argv[]) {
+  string path = "exemplos/" + (string) argv[1];
   Grafo grafo(path);
 
   cout << "Ciclo Euleriano" << endl;
