@@ -33,6 +33,8 @@ double Grafo::peso(int u, int v) {
 void Grafo::removerAresta(int u, int v) {
   this->adjacencia.set(u, v, 0);
   --this->grauTotal;
+  --this->graus[u];
+  --this->graus[v];
 }
 int Grafo::grau(int v) {
   return this->graus[v];
@@ -86,9 +88,6 @@ Grafo::Grafo(string path) {
 
     graus[u]++;
     graus[v]++;
-  }
-  for (int v = 1; v <= ordem; ++v) {
-    graus[v] /= 2;
   }
 
   this->labels = labels;
