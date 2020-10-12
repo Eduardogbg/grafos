@@ -72,7 +72,10 @@ Grafo::Grafo(string path) {
 
   getline(infile, line);
   vector<aresta> arestas;
-
+  unordered_map<int, int> graus;
+  for (int v = 1; v <= ordem; ++v) {
+    graus[v] = 0;
+  }
   while (getline(infile, line)) {
     istringstream iss(line);
 
@@ -80,28 +83,21 @@ Grafo::Grafo(string path) {
     double w;
     iss >> u >> v >> w;
     arestas.push_back({u, v, w});
-  }
 
-  this->labels = labels;
-  this->arestas = arestas;
-  this->grauTotal = arestas.size();
-
-  Simetrica adjacencia(arestas);
-  this->adjacencia = adjacencia;
-
-  unordered_map<int, int> graus;
-  for (int v = 1; v <= ordem; ++v) {
-    graus[v] = 0;
-  }
-  for (auto a : arestas) {
-    int u, v;
-    tie(u, v, ignore) = a;
     graus[u]++;
     graus[v]++;
   }
   for (int v = 1; v <= ordem; ++v) {
     graus[v] /= 2;
   }
+
+  this->labels = labels;
+  this->arestas = arestas;
+  this->graus = graus;
+  this->grauTotal = arestas.size();
+
+  Simetrica adjacencia(arestas);
+  this->adjacencia = adjacencia;
 }
 
 Grafo::Grafo(){};
