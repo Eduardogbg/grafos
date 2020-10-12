@@ -2,6 +2,7 @@
 
 #include <string>
 #include <vector>
+#include <unordered_map>
 #include "aresta.h"
 #include "simetrica.h"
 
@@ -34,4 +35,5 @@ private:
   vector<string> labels;
   Simetrica adjacencia;
   int grauTotal;
+  unordered_map<int, int> graus;
 };

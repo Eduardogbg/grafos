@@ -7,6 +7,7 @@
 #include <queue>
 #include <stack>
 #include <map>
+#include <unordered_map>
 #include <limits>
 #include "simetrica.h"
 #include "grafo.h"
@@ -33,16 +34,10 @@ void Grafo::removerAresta(int u, int v) {
   this->adjacencia.set(u, v, 0);
   --this->grauTotal;
 }
-
 int Grafo::grau(int v) {
-  int grau = 0;
+  return this->graus[v];
+}
 
-  for (auto u = 1ul; u <= labels.size(); ++u) {
-    grau += this->haAresta(u, v);
-  }
-
-  return grau;
-};
 vector<int> Grafo::vizinhos(int v) {
   vector<int> vizinhos;
 
@@ -54,15 +49,6 @@ vector<int> Grafo::vizinhos(int v) {
 
   return vizinhos;
 }
-
-Grafo::Grafo(vector<string> labels, vector<aresta> arestas) {
-  this->labels = labels;
-  this->arestas = arestas;
-  this->grauTotal = arestas.size();
-
-  Simetrica adjacencia(arestas);
-  this->adjacencia = adjacencia;
-};
 
 Grafo::Grafo(string path) {
   ifstream infile(path);
@@ -102,6 +88,20 @@ Grafo::Grafo(string path) {
 
   Simetrica adjacencia(arestas);
   this->adjacencia = adjacencia;
+
+  unordered_map<int, int> graus;
+  for (int v = 1; v <= ordem; ++v) {
+    graus[v] = 0;
+  }
+  for (auto a : arestas) {
+    int u, v;
+    tie(u, v, ignore) = a;
+    graus[u]++;
+    graus[v]++;
+  }
+  for (int v = 1; v <= ordem; ++v) {
+    graus[v] /= 2;
+  }
 }
 
 Grafo::Grafo(){};
