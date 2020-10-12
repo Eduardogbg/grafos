@@ -127,7 +127,7 @@ void Grafo::busca(int s) {
       } else {
         primeiro = false;
       }
-      cout << g.rotulo(v);
+      cout << v;
 
       auto vizinhos = this->vizinhos(v);
       for (auto vizinho: vizinhos) {
@@ -185,7 +185,7 @@ void Grafo::cicloEuleriano() {
     if (i != 0) {
       cout << ',';
     }
-    cout << g.rotulo(ciclo[i]);
+    cout << ciclo[i];
   }
   cout << endl;
 
@@ -242,7 +242,7 @@ void Grafo::bellmanFord(int s) {
   }
   
   for (auto v = 1; v <= ordem; ++v) {
-    cout << this->rotulo(v) << ": ";
+    cout << v << ": ";
 
     if (distAtual[v] == infinity) {
       cout << "Não há caminho" << endl;
@@ -257,10 +257,10 @@ void Grafo::bellmanFord(int s) {
       caminho.push(u);
     }
 
-    cout << this->rotulo(caminho.top());
+    cout << caminho.top();
     caminho.pop();
     while (!caminho.empty()) {
-      cout << ", " << this->rotulo(caminho.top());
+      cout << ", " << caminho.top();
       caminho.pop();
     }
     cout << "; d=" << distAtual[v] << endl;
@@ -288,7 +288,7 @@ void Grafo::floydWarshall() {
   }
 
   for (int v = 1; v <= ordem; ++v) {
-    cout << this->rotulo(v) << ":";
+    cout << v << ":";
 
     cout << dist.get(1, v);
     for (int u = 2; u <= ordem; ++u) {
